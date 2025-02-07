@@ -100,6 +100,7 @@ export default function SignIn(props) {
     console.log(response);
     // 응답 처리
     if (response.status === 200) {
+      alert(response)
         if (rememberMe) {
           localStorage.setItem('rememberedUserId', userId);
           setUserid(userId);
