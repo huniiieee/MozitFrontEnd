@@ -54,7 +54,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props) {
-  const { setUserid } = useAuth();
+  const { setUserid, setAccessToken} = useAuth();
   const [rememberMe, setRememberMe] = React.useState(() => {
     return localStorage.getItem('rememberedUserId') ? true : false;
   });
@@ -101,16 +101,18 @@ export default function SignIn(props) {
     // 응답 처리
     if (response.status === 200) {
       alert(response)
-        if (rememberMe) {
-          localStorage.setItem('rememberedUserId', userId);
-          setUserid(userId);
-        } else {
-          localStorage.removeItem('rememberedUserId');
-        }
-        if(userId==='admin')
-          window.location.href='/admin/dashboard';
-        else
-          window.location.href = '/'; // 성공 시 페이지 이동
+      const accessToken = response.headers.get('Temporary-Token');
+      setAccessToken(accessToken);
+      if (rememberMe) {
+        localStorage.setItem('rememberedUserId', userId);
+        setUserid(userId);
+      } else {
+        localStorage.removeItem('rememberedUserId');
+      }
+      if(userId==='admin')
+        window.location.href='/admin/dashboard';
+      else
+        window.location.href = '/'; // 성공 시 페이지 이동
     } else {
         throw new Error('로그인 실패');
     }
